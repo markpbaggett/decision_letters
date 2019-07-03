@@ -10,7 +10,8 @@ class DigitalCommonsConnection:
         self.options = Options()
         self.driver = Chrome(executable_path=os.path.abspath("/usr/bin/chromedriver"), options=self.options)
         self.login(user, password)
-        self.links = self.get_list_of_dissertations()
+        self.dissertations = self.get_list_of_dissertations()
+        self.lookup_values = self.__review_dissertations()
 
     def login(self, username, passwd):
         self.driver.get('https://trace.tennessee.edu/cgi/myaccount.cgi?context=')
@@ -25,8 +26,13 @@ class DigitalCommonsConnection:
         disserations = self.driver.find_elements_by_css_selector('.article-listing > a')
         return [disserations[link].get_attribute('href') for link in range(0, len(disserations))]
 
-    def get_decision_letters(self):
-        return
+    def __review_dissertations(self):
+        lookups = []
+        for dissertation in self.dissertations:
+            self.driver.get(dissertation)
+            link = self.driver.find_element_by_css_selector('#title > p > a')
+            lookups.append(link.get_attribute('href').split('=')[1].split('&')[0])
+        return lookups
 
 
 if __name__ == "__main__":
