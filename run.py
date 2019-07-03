@@ -23,10 +23,13 @@ class DigitalCommonsConnection:
     def get_list_of_dissertations(self):
         self.driver.get('https://trace.tennessee.edu/utk_graddiss/index.11.html#year_2015')
         disserations = self.driver.find_elements_by_css_selector('.article-listing > a')
-        return [disserations[link].get_attribute('href') for link in range(0, len(x))]
+        return [disserations[link].get_attribute('href') for link in range(0, len(disserations))]
+
+    def get_decision_letters(self):
+        return
 
 
 if __name__ == "__main__":
-
-    x = DigitalCommonsConnection("username", "password")
+    settings = yaml.safe_load(open("config.yml", "r"))
+    x = DigitalCommonsConnection(settings['username'], settings["password"])
     print(x.links)
